@@ -1,0 +1,54 @@
+{
+  "prefetchRate": 5,
+  "maxThreads": 1,
+  "disableRoutePrefixing": false,
+  "outputFileRate": 100,
+  "extensions": [
+    ".js",
+    ".jsx"
+  ],
+  "minLoadTime": 200,
+  "disablePreload": false,
+  "disableRuntime": false,
+  "preloadPollInterval": 300,
+  "productionSourceMaps": false,
+  "silent": false,
+  "entry": "index.js",
+  "paths": {
+    "ROOT": "/home/naraharirao/flder/my-portfolio",
+    "SRC": "/home/naraharirao/flder/my-portfolio/src",
+    "DIST": "/home/naraharirao/flder/my-portfolio/dist",
+    "ASSETS": "/home/naraharirao/flder/my-portfolio/dist",
+    "PLUGINS": "/home/naraharirao/flder/my-portfolio/plugins",
+    "TEMP": "/home/naraharirao/flder/my-portfolio/tmp",
+    "ARTIFACTS": "/home/naraharirao/flder/my-portfolio/artifacts",
+    "PUBLIC": "/home/naraharirao/flder/my-portfolio/public",
+    "NODE_MODULES": "/home/naraharirao/flder/my-portfolio/node_modules",
+    "EXCLUDE_MODULES": "/home/naraharirao/flder/my-portfolio/node_modules",
+    "PACKAGE": "/home/naraharirao/flder/my-portfolio/package.json",
+    "HTML_TEMPLATE": "/home/naraharirao/flder/my-portfolio/dist/index.html",
+    "STATIC_DATA": "/home/naraharirao/flder/my-portfolio/dist/staticData"
+  },
+  "plugins": [
+    "/home/naraharirao/flder/my-portfolio"
+  ],
+  "siteRoot": "/",
+  "basePath": "",
+  "publicPath": "/",
+  "assetsPath": "",
+  "extractCssChunks": false,
+  "inlineCss": false,
+  "babelExcludes": [],
+  "devServer": {
+    "host": "localhost",
+    "port": 3000
+  },
+  "terser": {
+    "terserOptions": {
+      "mangle": {},
+      "parse": {},
+      "compress": {},
+      "output": {}
+    }
+  }
+}
