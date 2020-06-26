@@ -3,7 +3,4 @@ target/
 
 node_modules/
 
-_cache
-_site
-.idea/
-.jekyll-cache
+
