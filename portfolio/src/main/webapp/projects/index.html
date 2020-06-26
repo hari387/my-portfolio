@@ -11,7 +11,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Portfolio</title>
+    <title>Portfolio | Projects </title>
     <meta name="theme-color" content="#222222"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/assets/js/jquery.min.js"></script>
@@ -76,75 +76,33 @@
           <div class="row">
             <div class="col-md-8 offset-md-1">
               <div class="card">
-                <div class="page-content wc-container">
+                <h1 id="projects">Projects</h1>
+<hr />
 
-  <div class="post">
-    <h2 class="post_title"></h2>
-    <ul>
-      
-        
-      
-        
-      
-        
-          
-        
-      
-        
-          
-        
-      
-        
-          
-        
-          
-        
-      
-        
-          
-        
-          
-        
-      
-        
-          
-          <li class="archive_list">
-            <time>15 Sep 2016</time>
-            <a class="archive_list_article_link" href='/2016/09/be-social/'>Be social</a>
-            <p>Built-in share buttons!</p>
-          </li>
-          
-        
-      
-        
-          
-        
-          
-        
-          
-          <li class="archive_list">
-            <time>01 Aug 2016</time>
-            <a class="archive_list_article_link" href='/2016/08/analytics-tags-comments/'>Analytics, tags and comments</a>
-            <p>Here you'll find how to setup analytics, tags and comments for your blog</p>
-          </li>
-          
-        
-          
-        
-      
-        
-          
-        
-          
-        
-      
-        
-          
-        
-      
-    </ul>
-  </div>
-</div>
+<h3 id="ray-tracing">Ray Tracing</h3>
+
+<p>A friend and I built a ray tracer in pure C++, without any graphics libraries. We also gave it the functionality to raytrace <code class="language-plaintext highlighter-rouge">.stl</code> files, and sped it up 3x by using a <a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">Bounding Volume Hierachy</a>. You can find the project <a href="https://github.com/hari387/architectural_raytracer">here</a>. It’s possible to speed it up even more using CUDA, but we decided to optimize for developer time.</p>
+
+<p><img src="https://camo.githubusercontent.com/f33e693d485971d62937a83be95586c5570493b5/68747470733a2f2f692e696d6775722e636f6d2f41675a554e496e2e706e67" alt="Raytraced Spheres" /></p>
+
+<p>If you’d like to do this yourself, <a href="https://github.com/RayTracing/raytracing.github.io">Ray Tracing in One Weekend</a> by Peter Shirley is an excellent resource.</p>
+
+<hr />
+
+<h3 id="neural-network-sans-tensorflow">Neural Network <em>sans</em> Tensorflow</h3>
+
+<p>I built a Neural Network class in Python without any machine learning frameworks and trained a network on the MNIST dataset up to a 90% accuracy. In the process, I learned a bunch about optimization, multivariable calculus, and more. You can access the project and run it <a href="https://repl.it/@mpm3/mllearning#network.py">here</a>.</p>
+
+<p><img src="../assets/images/neuralnet.png" alt="" /></p>
+
+<p>Again, if you’d like to learn more about this, <a href="http://neuralnetworksanddeeplearning.com/">Neural Networks and Deep Learning</a> by Michael Nielsen is a great book.</p>
+
+<hr />
+
+<h3 id="gridsnekio">Gridsnek<span>.io</span></h3>
+<p>I built a fully functional grid version of <a href="slither.io">slither.io</a> in the browser using <a href="phaser.io">phaser.io</a>, a game engine made for the browser, and <a href="socket.io">socket.io</a>. You can find the project <a href="https://github.com/hari387/ekans.io">here</a>, or play it <a href="ekans-io.herokuapp.com">here</a>.</p>
+
+<p><img src="../assets/images/gridsnek.png" alt="" /></p>
 
               </div>
             </div>
