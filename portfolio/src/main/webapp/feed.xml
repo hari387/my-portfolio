@@ -46,7 +46,7 @@ toc: true           &amp;lt;=========== this one&lt;/code&gt;&lt;/pre&gt;&lt;/fi
 &lt;h2 id=&quot;and-one-more&quot;&gt;And one more&lt;/h2&gt;
 &lt;p&gt;It allowance prevailed enjoyment in it. Calling observe for who pressed raising his. Can connection instrument astonished unaffected his motionless preference. Announcing say boy precaution unaffected difficulty alteration him. Above be would at so going heard. Engaged at village at am equally proceed. Settle nay length almost ham direct extent. Agreement for listening remainder get attention law acuteness day. Now whatever surprise resolved elegance indulged own way outlived.&lt;/p&gt;
 </description>
-				<pubDate>Fri, 03 Aug 2018 11:07:00 -0700</pubDate>
+				<pubDate>Fri, 03 Aug 2018 11:07:00 +0000</pubDate>
 				<link>/2018/08/table-of-content/</link>
 				<guid isPermaLink="true">/2018/08/table-of-content/</guid>
 			</item>
@@ -314,7 +314,7 @@ toc: true           &amp;lt;=========== this one&lt;/code&gt;&lt;/pre&gt;&lt;/fi
 | Footer row&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
-				<pubDate>Fri, 09 Feb 2018 11:07:00 -0800</pubDate>
+				<pubDate>Fri, 09 Feb 2018 11:07:00 +0000</pubDate>
 				<link>/2018/02/table-styles/</link>
 				<guid isPermaLink="true">/2018/02/table-styles/</guid>
 			</item>
@@ -343,7 +343,7 @@ toc: true           &amp;lt;=========== this one&lt;/code&gt;&lt;/pre&gt;&lt;/fi
 
 &lt;p&gt;&lt;img src=&quot;/assets/images/ipad_landscape.PNG&quot; alt=&quot;My helpful screenshot&quot; class=&quot;center-image&quot; /&gt;&lt;em&gt;iPad mini landscape&lt;/em&gt;&lt;/p&gt;
 </description>
-				<pubDate>Thu, 01 Dec 2016 08:25:06 -0800</pubDate>
+				<pubDate>Thu, 01 Dec 2016 16:25:06 +0000</pubDate>
 				<link>/2016/12/jekyll-clean-theme/</link>
 				<guid isPermaLink="true">/2016/12/jekyll-clean-theme/</guid>
 			</item>
@@ -411,7 +411,7 @@ toc: true           &amp;lt;=========== this one&lt;/code&gt;&lt;/pre&gt;&lt;/fi
 &lt;code class=&quot;language-plaintext key highlighter-rouge&quot;&gt;Ctrl&lt;/code&gt; + &lt;code class=&quot;language-plaintext key highlighter-rouge&quot;&gt;D&lt;/code&gt; = logs you out.&lt;br /&gt;
 &lt;code class=&quot;language-plaintext key highlighter-rouge&quot;&gt;Ctrl&lt;/code&gt; + &lt;code class=&quot;language-plaintext key highlighter-rouge&quot;&gt;R&lt;/code&gt; = finds the last command matching the entered letters.&lt;/p&gt;
 </description>
-				<pubDate>Wed, 02 Nov 2016 09:25:06 -0700</pubDate>
+				<pubDate>Wed, 02 Nov 2016 16:25:06 +0000</pubDate>
 				<link>/2016/11/text-formatting/</link>
 				<guid isPermaLink="true">/2016/11/text-formatting/</guid>
 			</item>
@@ -505,7 +505,7 @@ toc: true           &amp;lt;=========== this one&lt;/code&gt;&lt;/pre&gt;&lt;/fi
 ...&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
-				<pubDate>Sat, 01 Oct 2016 09:25:06 -0700</pubDate>
+				<pubDate>Sat, 01 Oct 2016 16:25:06 +0000</pubDate>
 				<link>/2016/10/code-syntax-highlighting/</link>
 				<guid isPermaLink="true">/2016/10/code-syntax-highlighting/</guid>
 			</item>
@@ -624,7 +624,7 @@ toc: true           &amp;lt;=========== this one&lt;/code&gt;&lt;/pre&gt;&lt;/fi
 &lt;span class=&quot;nv&quot;&gt;$background-pattern&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'random-grey-variations.png'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
-				<pubDate>Tue, 20 Sep 2016 09:25:06 -0700</pubDate>
+				<pubDate>Tue, 20 Sep 2016 16:25:06 +0000</pubDate>
 				<link>/2016/09/customizations/</link>
 				<guid isPermaLink="true">/2016/09/customizations/</guid>
 			</item>
@@ -653,7 +653,7 @@ Out-of-the box it has:&lt;/p&gt;
     &lt;a title=&quot;Last.fm&quot; href=&quot;http://lastfm.com/user/&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fab fa-lastfm fa-2x&quot;&gt;&lt;/i&gt;&lt;/a&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;a title=&quot;RSS&quot; href=&quot;http://localhost:4000/&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fa fa-rss fa-2x&quot;&gt;&lt;/i&gt;&lt;/a&gt;
+    &lt;a title=&quot;RSS&quot; href=&quot;/&quot; target=&quot;_blank&quot;&gt;&lt;i class=&quot;fa fa-rss fa-2x&quot;&gt;&lt;/i&gt;&lt;/a&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
@@ -708,7 +708,7 @@ To turn them on in the header of your post add:&lt;/p&gt;
   &lt;li&gt;add styles in &lt;strong&gt;css/theme.css&lt;/strong&gt;.&lt;/li&gt;
 &lt;/ol&gt;
 </description>
-				<pubDate>Thu, 15 Sep 2016 09:25:06 -0700</pubDate>
+				<pubDate>Thu, 15 Sep 2016 16:25:06 +0000</pubDate>
 				<link>/2016/09/be-social/</link>
 				<guid isPermaLink="true">/2016/09/be-social/</guid>
 			</item>
@@ -733,7 +733,7 @@ To turn them on in the header of your post add:&lt;/p&gt;
 
 &lt;p&gt;To enable &lt;a href=&quot;http://disqus.com&quot;&gt;Disqus&lt;/a&gt; register on the site and then just put your name in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_config.xml&lt;/code&gt;. Comments could be switched on and off on per post basis, just put &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;comments: true&lt;/code&gt; to enable them.&lt;/p&gt;
 </description>
-				<pubDate>Mon, 01 Aug 2016 09:25:06 -0700</pubDate>
+				<pubDate>Mon, 01 Aug 2016 16:25:06 +0000</pubDate>
 				<link>/2016/08/analytics-tags-comments/</link>
 				<guid isPermaLink="true">/2016/08/analytics-tags-comments/</guid>
 			</item>
@@ -771,7 +771,7 @@ To turn them on in the header of your post add:&lt;/p&gt;
  &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
-				<pubDate>Fri, 01 Jul 2016 09:25:06 -0700</pubDate>
+				<pubDate>Fri, 01 Jul 2016 16:25:06 +0000</pubDate>
 				<link>/2016/07/images/</link>
 				<guid isPermaLink="true">/2016/07/images/</guid>
 			</item>
@@ -808,7 +808,7 @@ respective owners:&lt;/p&gt;
   &lt;li&gt;js/jquery.min.js - &lt;a href=&quot;https://jquery.com&quot;&gt;jquery&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-				<pubDate>Sun, 01 Nov 2015 08:25:06 -0800</pubDate>
+				<pubDate>Sun, 01 Nov 2015 16:25:06 +0000</pubDate>
 				<link>/2015/11/installation/</link>
 				<guid isPermaLink="true">/2015/11/installation/</guid>
 			</item>
