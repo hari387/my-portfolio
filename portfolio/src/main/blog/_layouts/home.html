@@ -31,6 +31,54 @@ layout: page
 
 <div class="post-footer">
     <div class="column-full">
-        <h3><a href="{{ 'archive' | relative_url }}">Blog archive</a></h3>
+        <h3><a href="{{ 'archive/index.html' | relative_url }}">Blog archive</a></h3>
     </div>
+    <div>
+        <form id="comment-form">
+            <input type="text" placeholder="Comment Here" id="new-comment" />
+            <input type="button" onclick="addComment()" value="Submit" />
+        </form>
+    </div>
+    <div id='comments'>
+
+    </div>
+    <script>
+        var comments = {}
+        function handleResponse(response){
+            response.json().then((text) => comments = text).then(renderComments)
+        }
+        fetch('../data').then(handleResponse);
+        
+        function renderComments(){
+            document.getElementById('comments').innerHTML = "";
+            for(var i = comments['messages'].length - 1;i>=0;i--){
+                document.getElementById('comments').innerHTML += comments['messages'][i] + '<br>';
+            }
+        }
+        
+
+        function addComment(){
+            comment = document.getElementById('new-comment').value;
+            document.getElementById('new-comment').value = "";
+            comments['messages'].push(comment);
+            renderComments();
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "../data");
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send("comment-input=" + comment);
+        }
+
+        var input = document.getElementById("new-comment");
+
+        // Execute a function when the user releases a key on the keyboard
+        input.addEventListener("keydown", function(event) {
+        // Number 13 is the "Enter" key on the keyboard
+        if (event.keyCode === 13) {
+            // Cancel the default action, if needed
+            event.preventDefault();
+            addComment();
+        }
+        });
+        
+    </script>
 </div>
