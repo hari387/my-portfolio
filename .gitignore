@@ -3,4 +3,8 @@ target/
 
 node_modules/
 
+_site
+webapp
+.jekyll-cache
 
+.vscode
