@@ -43,7 +43,7 @@ layout: page
 
     </div>
     <script>
-        var comments = {}
+        var comments = []
         function handleResponse(response){
             response.json().then((text) => comments = text).then(renderComments)
         }
@@ -51,21 +51,21 @@ layout: page
         
         function renderComments(){
             document.getElementById('comments').innerHTML = "";
-            for(var i = comments['messages'].length - 1;i>=0;i--){
-                document.getElementById('comments').innerHTML += comments['messages'][i] + '<br>';
+            for(var i = comments.length - 1;i>=0;i--){
+                document.getElementById('comments').innerHTML += comments[i] + '<br>';
             }
         }
         
 
         function addComment(){
             comment = document.getElementById('new-comment').value;
-            document.getElementById('new-comment').value = "";
-            comments['messages'].push(comment);
+            comments.push(comment);
             renderComments();
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "../data");
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr.send("comment-input=" + comment);
+            document.getElementById('new-comment').value = "";
         }
 
         var input = document.getElementById("new-comment");
