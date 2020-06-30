@@ -37,6 +37,16 @@ layout: page
         <form id="comment-form">
             <input type="text" placeholder="Comment Here" id="new-comment" />
             <input type="button" onclick="addComment()" value="Submit" />
+            <br>
+            Max Comments Displayed:
+            <input type="number" 
+                value="10"
+                min="5" 
+                max="30" 
+                id="max-comments" 
+                onchange="fetch('../data?maxcomments=' + document.getElementById('max-comments').value).then(handleResponse);" />
+            <br>
+            <input type="button" onclick="deleteComments()" value="Delete Comments" />
         </form>
     </div>
     <div id='comments'>
@@ -45,10 +55,14 @@ layout: page
     <script>
         var comments = []
 
-        fetch('../data').then(handleResponse);
+        function getComments(){
+            fetch('../data?maxcomments=' + document.getElementById('max-comments').value).then(handleResponse);
+        }
+
+        getComments();
 
         function handleResponse(response){
-            response.json().then((text) => comments = text).then(renderComments)
+            response.json().then((text) => comments = text).then(renderComments);
         }
         
         function renderComments(){
@@ -56,6 +70,10 @@ layout: page
             for(var i = 0;i < comments.length;i++){
                 document.getElementById('comments').innerHTML += comments[i] + '<br>';
             }
+        }
+
+        function deleteComments(){
+            fetch('../delete-data',{method:'POST'}).then(() => getComments());
         }
         
 
@@ -65,7 +83,7 @@ layout: page
             xhr.open("POST", "../data");
             xhr.onreadystatechange = function () {
                 if(xhr.readyState === XMLHttpRequest.DONE) {
-                    fetch('../data').then(handleResponse);
+                    fetch('../data?maxcomments=' + document.getElementById('max-comments').value).then(handleResponse);
                 }
             };
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

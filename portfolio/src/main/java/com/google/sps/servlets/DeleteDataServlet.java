@@ -28,52 +28,28 @@ import java.util.Arrays;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
+@WebServlet("/delete-data")
+public class DeleteDataServlet extends HttpServlet {
 
-    public DataServlet() {
+    public DeleteDataServlet() {
 
-    }
-
-    private String convertToJsonUsingGson(Object obj) {
-        Gson gson = new Gson();
-        String json = gson.toJson(obj);
-        System.out.println(json);
-        return json;
-    }
-
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int maxc = Integer.parseInt(request.getParameter("maxcomments"));
-        System.out.println(maxc);
-        ArrayList<String> comments = new ArrayList<String>();
-        Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);;
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        PreparedQuery results = datastore.prepare(query);
-        for (Entity commentEntity : results.asIterable()) {
-            comments.add((String) commentEntity.getProperty("content"));
-            if(comments.size() == maxc)
-                break;
-        }
-        response.setContentType("application/json;");
-        response.getWriter().println(convertToJsonUsingGson(comments));
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String content = request.getParameter("comment-input");
-
-        Entity commentEntity = new Entity("Comment");
-        commentEntity.setProperty("content", content);
-        commentEntity.setProperty("timestamp", System.currentTimeMillis());
-
+        Query query = new Query("Comment");
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        datastore.put(commentEntity);
+        PreparedQuery results = datastore.prepare(query);
+        ArrayList<Key> keys = new ArrayList<Key>();
+        for (Entity commentEntity : results.asIterable()) {
+            keys.add(commentEntity.getKey());
+        }
+        datastore.delete(keys);
     }
-
 }
