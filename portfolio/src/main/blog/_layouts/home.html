@@ -44,10 +44,12 @@ layout: page
     </div>
     <script>
         var comments = []
+
+        fetch('../data').then(handleResponse);
+
         function handleResponse(response){
             response.json().then((text) => comments = text).then(renderComments)
         }
-        fetch('../data').then(handleResponse);
         
         function renderComments(){
             document.getElementById('comments').innerHTML = "";
@@ -59,12 +61,15 @@ layout: page
 
         function addComment(){
             comment = document.getElementById('new-comment').value;
-            comments.push(comment);
-            renderComments();
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "../data");
+            xhr.onreadystatechange = function () {
+                if(xhr.readyState === XMLHttpRequest.DONE) {
+                    fetch('../data').then(handleResponse);
+                }
+            };
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("comment-input=" + comment);
+            xhr.send("comment-input=" + comment)
             document.getElementById('new-comment').value = "";
         }
 
