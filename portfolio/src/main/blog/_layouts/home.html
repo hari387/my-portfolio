@@ -73,6 +73,8 @@ layout: page
         }
 
         function deleteComments(){
+
+            // double GET request is deliberately done as solution to issue #4
             fetch('../delete-data',{method:'POST'}).then(() => {
                 fetch('../delete-data',{method: 'POST'}).then(() => getComments());
             });
@@ -85,7 +87,11 @@ layout: page
             xhr.open("POST", "../data");
             xhr.onreadystatechange = function () {
                 if(xhr.readyState === XMLHttpRequest.DONE) {
-                    fetch('../data?maxcomments=' + document.getElementById('max-comments').value).then(handleResponse);
+
+                    // double GET request is deliberately done as solution to issue #5
+                    fetch('../data?maxcomments=' + document.getElementById('max-comments').value).then(() => {
+                        fetch('../data?maxcomments=' + document.getElementById('max-comments').value).then(handleResponse);
+                    });
                 }
             };
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
