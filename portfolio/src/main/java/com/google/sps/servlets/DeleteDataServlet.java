@@ -37,19 +37,18 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 @WebServlet("/delete-data")
 public class DeleteDataServlet extends HttpServlet {
 
-    public DeleteDataServlet() {
+    DatastoreService datastore;
 
+    public DeleteDataServlet() {
+        datastore = DatastoreServiceFactory.getDatastoreService();
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Query query = new Query("Comment");
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastore.prepare(query);
-        ArrayList<Key> keys = new ArrayList<Key>();
         for (Entity commentEntity : results.asIterable()) {
-            keys.add(commentEntity.getKey());
+            datastore.delete(commentEntity.getKey());
         }
-        datastore.delete(keys);
     }
 }

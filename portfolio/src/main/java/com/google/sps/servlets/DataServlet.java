@@ -36,8 +36,10 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-    public DataServlet() {
+    DatastoreService datastore;
 
+    public DataServlet() {
+        datastore = DatastoreServiceFactory.getDatastoreService();
     }
 
     private String convertToJsonUsingGson(Object obj) {
@@ -49,15 +51,16 @@ public class DataServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int maxc = Integer.parseInt(request.getParameter("maxcomments"));
-        System.out.println(maxc);
+        int maxComments = Integer.parseInt(request.getParameter("maxcomments"));
+        System.out.println(maxComments);
         ArrayList<String> comments = new ArrayList<String>();
-        Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);;
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+        System.out.println("comments query starting");
         PreparedQuery results = datastore.prepare(query);
+        System.out.println("comments queried");
         for (Entity commentEntity : results.asIterable()) {
             comments.add((String) commentEntity.getProperty("content"));
-            if(comments.size() == maxc)
+            if(comments.size() == maxComments)
                 break;
         }
         response.setContentType("application/json;");
@@ -72,7 +75,6 @@ public class DataServlet extends HttpServlet {
         commentEntity.setProperty("content", content);
         commentEntity.setProperty("timestamp", System.currentTimeMillis());
 
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(commentEntity);
     }
 

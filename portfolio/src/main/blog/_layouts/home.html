@@ -73,7 +73,9 @@ layout: page
         }
 
         function deleteComments(){
-            fetch('../delete-data',{method:'POST'}).then(() => getComments());
+            fetch('../delete-data',{method:'POST'}).then(() => {
+                fetch('../delete-data',{method: 'POST'}).then(() => getComments());
+            });
         }
         
 
