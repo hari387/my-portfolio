@@ -25,15 +25,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/delete-data")
 public class DeleteDataServlet extends HttpServlet {
 
-  DatastoreService datastore;
-
-  public DeleteDataServlet() {
-    datastore = DatastoreServiceFactory.getDatastoreService();
-  }
+  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

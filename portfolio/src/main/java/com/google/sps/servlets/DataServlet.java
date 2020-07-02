@@ -28,17 +28,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  DatastoreService datastore;
-  Gson gson;
-
-  public DataServlet() {
-    datastore = DatastoreServiceFactory.getDatastoreService();
-    gson = new Gson();
-  }
+  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  Gson gson = new Gson();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -46,11 +40,11 @@ public class DataServlet extends HttpServlet {
     int maxComments = Integer.parseInt(request.getParameter("maxcomments"));
     ArrayList<String> comments = new ArrayList<String>();
 
-    // Sort the query so we will be adding newest comments first
+    // Sort the query so we will be adding newest comments first.
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
-    // Gets content of newest comments in according to maxComments specified by request
+    // Gets content of newest comments according to maxComments specified by request.
     for (Entity commentEntity : results.asIterable()) {
       if (comments.size() == maxComments) break;
       comments.add((String) commentEntity.getProperty("content"));
