@@ -29,17 +29,17 @@ public class LoginStatusServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    response.setContentType("application/json;");
     if (userService.isUserLoggedIn()) {
       String userEmail = userService.getCurrentUser().getEmail();
       String urlToRedirectToAfterUserLogsOut = "/";
       String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
 
-      response.getWriter().println("<h1>Logged in as " + userEmail + "!</h1>");
-      response.getWriter().println("<h3>Logout <a href=\"" + logoutUrl + "\">here</a>.</h3>");
+      response.getWriter().println("{\"loggedIn\": true, \"logoutUrl\":\"" + logoutUrl + "\"}");
     } else {
       String urlToRedirectToAfterUserLogsIn = "/";
       String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
-      response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
+      response.getWriter().println("{\"loggedIn\": false, \"loginUrl\":\"" + loginUrl + "\"}");
     }
   }
 }

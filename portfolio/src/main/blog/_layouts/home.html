@@ -36,7 +36,7 @@ layout: page
     <div>
         <form id="comment-form">
             <input type="text" placeholder="Comment Here" id="comment-input" />
-            <input type="button" onclick="addComment()" value="Submit" />
+            <input type="button" value="Submit" onclick="addComment()" />
             <br>
             Max Comments Displayed:
             <input type="number" value="10" min="5" max="30" id="max-comments"
@@ -44,18 +44,39 @@ layout: page
             <br>
             <input type="button" onclick="deleteComments()" value="Delete Comments" />
         </form>
+        <div>
+            <a id="login-button" href="/" class="button">Login</a>
+            <a id="logout-button" href="/" class="button">Logout</a>
+        </div>
     </div>
     <div id='comments'>
 
     </div>
     <script>
 
+        var commentForm = document.getElementById('comment-form');
         var commentInput = document.getElementById('comment-input');
         var maxCommentsInput = document.getElementById('max-comments');
         var commentsSection = document.getElementById('comments');
+        var loginButton = document.getElementById('login-button');
+        var logoutButton = document.getElementById('logout-button');
 
         // Initial GET to display comments on page load.
         getComments();
+
+        fetch('../login-status')
+            .then((response) => response.json())
+            .then((loginInfo) => {
+                console.log(loginInfo);
+                if(loginInfo['loggedIn']){
+                    logoutButton.href = loginInfo['logoutUrl'];
+                    loginButton.hidden = true;
+                } else {
+                    loginButton.href = loginInfo['loginUrl']
+                    logoutButton.hidden = true;
+                    commentForm.hidden = true;
+                }
+            });
 
         // Add comment on "Enter" key press.
         commentInput.addEventListener("keydown", function (event) {
@@ -69,6 +90,12 @@ layout: page
                 addComment();
             }
         });
+
+        function login() {
+            // TODO
+        }
+
+
 
         function getComments() {
             // Double GET request is deliberately done as solution to issue #5.
