@@ -31,6 +31,84 @@ layout: page
 
 <div class="post-footer">
     <div class="column-full">
-        <h3><a href="{{ 'archive' | relative_url }}">Blog archive</a></h3>
+        <h3><a href="{{ 'archive/index.html' | relative_url }}">Blog archive</a></h3>
     </div>
+    <div>
+        <form id="comment-form">
+            <input type="text" placeholder="Comment Here" id="comment-input" />
+            <input type="button" onclick="addComment()" value="Submit" />
+            <br>
+            Max Comments Displayed:
+            <input type="number" value="10" min="5" max="30" id="max-comments"
+                onchange="fetch('../data?maxcomments=' + maxCommentsInput.value).then(handleResponse);" />
+            <br>
+            <input type="button" onclick="deleteComments()" value="Delete Comments" />
+        </form>
+    </div>
+    <div id='comments'>
+
+    </div>
+    <script>
+
+        var commentInput = document.getElementById('comment-input');
+        var maxCommentsInput = document.getElementById('max-comments');
+        var commentsSection = document.getElementById('comments');
+
+        // Initial GET to display comments on page load.
+        getComments();
+
+        // Add comment on "Enter" key press.
+        commentInput.addEventListener("keydown", function (event) {
+            // Number 13 is the "Enter" key on the keyboard.
+            if (event.keyCode === 13) {
+                // Cancel the default action,
+                // which is submitting the form and redirecting to another page.
+                // We cancel because we want to stay on the same page.
+                event.preventDefault();
+
+                addComment();
+            }
+        });
+
+        function getComments() {
+            // Double GET request is deliberately done as solution to issue #5.
+            fetch('../data?maxcomments=' + maxCommentsInput.value).then(() => {
+                fetch('../data?maxcomments=' + maxCommentsInput.value).then(handleResponse);
+            });
+        }
+
+        function handleResponse(response) {
+            response.json().then((text) => comments = text).then(renderComments);
+        }
+
+        function renderComments() {
+            commentsSection.innerHTML = '';
+            for (var i = 0; i < comments.length; i++) {
+                commentsSection.innerHTML += comments[i] + '<br>';
+            }
+        }
+
+        function deleteComments() {
+            // Double DELETE request is deliberately done as solution to issue #4.
+            fetch('../delete-data', { method: 'POST' }).then(() => {
+                fetch('../delete-data', { method: 'POST' }).then(() => getComments());
+            });
+        }
+
+
+        function addComment() {
+            let comment = commentInput.value;
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "../data");
+            xhr.onreadystatechange = function () { // If the request is done, GET and display comments again.
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    getComments();
+                }
+            };
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send("comment-input=" + comment)
+            commentInput.value = "";
+        }
+
+    </script>
 </div>

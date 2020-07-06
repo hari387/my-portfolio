@@ -19,49 +19,25 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
+@WebServlet("/delete-data")
+public class DeleteDataServlet extends HttpServlet {
 
   DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  Gson gson = new Gson();
-
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-    int maxComments = Integer.parseInt(request.getParameter("maxcomments"));
-    ArrayList<String> comments = new ArrayList<String>();
-
-    // Sort the query so we will be adding newest comments first.
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-    PreparedQuery results = datastore.prepare(query);
-
-    // Gets content of newest comments according to maxComments specified by request.
-    for (Entity commentEntity : results.asIterable()) {
-      if (comments.size() == maxComments) break;
-      comments.add((String) commentEntity.getProperty("content"));
-    }
-
-    response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(comments));
-  }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String content = request.getParameter("comment-input");
+    Query query = new Query("Comment");
 
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("content", content);
-    commentEntity.setProperty("timestamp", System.currentTimeMillis());
+    PreparedQuery results = datastore.prepare(query);
 
-    datastore.put(commentEntity);
+    for (Entity commentEntity : results.asIterable()) {
+      datastore.delete(commentEntity.getKey());
+    }
   }
 }
