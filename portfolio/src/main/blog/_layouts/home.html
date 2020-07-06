@@ -42,9 +42,10 @@ layout: page
             <input type="number" value="10" min="5" max="30" id="max-comments"
                 onchange="fetch('../data?maxcomments=' + maxCommentsInput.value).then(handleResponse);" />
             <br>
-            <input type="button" onclick="deleteComments()" value="Delete Comments" />
         </form>
         <div>
+            <input type="button" onclick="deleteComments()" value="Delete Comments" />
+            <br>
             <a id="login-button" href="/" class="button">Login</a>
             <a id="logout-button" href="/" class="button">Logout</a>
         </div>
@@ -67,7 +68,6 @@ layout: page
         fetch('../login-status')
             .then((response) => response.json())
             .then((loginInfo) => {
-                console.log(loginInfo);
                 if(loginInfo['loggedIn']){
                     logoutButton.href = loginInfo['logoutUrl'];
                     loginButton.hidden = true;
@@ -91,12 +91,6 @@ layout: page
             }
         });
 
-        function login() {
-            // TODO
-        }
-
-
-
         function getComments() {
             // Double GET request is deliberately done as solution to issue #5.
             fetch('../data?maxcomments=' + maxCommentsInput.value).then(() => {
@@ -105,13 +99,15 @@ layout: page
         }
 
         function handleResponse(response) {
-            response.json().then((text) => comments = text).then(renderComments);
+            response.json().then(renderComments);
         }
 
-        function renderComments() {
-            commentsSection.innerHTML = '';
+        function renderComments(comments) {
+            commentsSection.innerHTML = '<br><br>';
             for (var i = 0; i < comments.length; i++) {
-                commentsSection.innerHTML += comments[i] + '<br>';
+                commentsSection.innerHTML += comments[i]['email'].substring(0,comments[i]['email'].indexOf('@'));
+                commentsSection.innerHTML += ' on ' + new Date(comments[i]['timestamp']).toString().substring(0,15) + ':<br>';
+                commentsSection.innerHTML += comments[i]['content'] + '<br><br>';
             }
         }
 

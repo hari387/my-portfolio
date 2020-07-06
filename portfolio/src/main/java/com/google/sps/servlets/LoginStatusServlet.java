@@ -31,7 +31,6 @@ public class LoginStatusServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json;");
     if (userService.isUserLoggedIn()) {
-      String userEmail = userService.getCurrentUser().getEmail();
       String urlToRedirectToAfterUserLogsOut = "/";
       String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
 
