@@ -16,7 +16,6 @@ package com.google.sps.data;
 
 public class Comment {
   public String email;
-  public String nickname;
   public long timestamp;
   public String content;
 

@@ -57,7 +57,6 @@ public class DataServlet extends HttpServlet {
         (String)commentEntity.getProperty("content")
       ));
     }
-    System.out.println(gson.toJson(comments));
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(comments));
   }
@@ -68,10 +67,10 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json");
 
     if(!userService.isUserLoggedIn()){
-      // HttpServletResponse.setStatus(int statusCode, String statusMessage) is deprecated
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED,"Not logged in");
+      // If the user is not logged in, throw a 401 Unauthorized Error.
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       response.getWriter().println("{\"success\": false, \"errorMessage\": \"Not logged in\"}");
-        return;
+      return;
     }
 
     String content = request.getParameter("comment-input");

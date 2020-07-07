@@ -40,7 +40,7 @@ layout: page
             <br>
             Max Comments Displayed:
             <input type="number" value="10" min="5" max="30" id="max-comments"
-                onchange="fetch('../data?maxcomments=' + maxCommentsInput.value).then(handleResponse);" />
+                onchange="getComments()"/>
             <br>
         </form>
         <div>
@@ -65,6 +65,7 @@ layout: page
         // Initial GET to display comments on page load.
         getComments();
 
+        // Get login status and hide appropriate elements.
         fetch('../login-status')
             .then((response) => response.json())
             .then((loginInfo) => {
@@ -94,12 +95,10 @@ layout: page
         function getComments() {
             // Double GET request is deliberately done as solution to issue #5.
             fetch('../data?maxcomments=' + maxCommentsInput.value).then(() => {
-                fetch('../data?maxcomments=' + maxCommentsInput.value).then(handleResponse);
+                fetch('../data?maxcomments=' + maxCommentsInput.value)
+                    .then((response) => response.json())
+                    .then(renderComments);
             });
-        }
-
-        function handleResponse(response) {
-            response.json().then(renderComments);
         }
 
         function renderComments(comments) {
