@@ -105,7 +105,7 @@ layout: page
             commentsSection.innerHTML = '<br><br>';
             for (var i = 0; i < comments.length; i++) {
                 commentsSection.innerHTML += comments[i]['username'];
-                commentsSection.innerHTML += ' on ' + new Date(comments[i]['timestamp']).toString().substring(0,15) + ':<br>';
+                commentsSection.innerHTML += ' on ' + new Date(comments[i]['timestamp']).toLocaleDateString(undefined,{dateStyle:'full'}) + ':<br>';
                 commentsSection.innerHTML += comments[i]['content'] + '<br><br>';
             }
         }
