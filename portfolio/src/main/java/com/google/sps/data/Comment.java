@@ -15,12 +15,12 @@
 package com.google.sps.data;
 
 public class Comment {
-  public String email;
+  public String username;
   public long timestamp;
   public String content;
 
-  public Comment(String email, long timestamp, String content){
-    this.email = email;
+  public Comment(String username, long timestamp, String content){
+    this.username = username;
     this.timestamp = timestamp;
     this.content = content;
   }

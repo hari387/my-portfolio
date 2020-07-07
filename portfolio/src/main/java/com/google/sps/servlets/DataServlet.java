@@ -52,7 +52,7 @@ public class DataServlet extends HttpServlet {
     for (Entity commentEntity : results.asIterable()) {
       if (comments.size() == maxComments) break;
       comments.add(new Comment(
-        (String)commentEntity.getProperty("email"),
+        (String)commentEntity.getProperty("username"),
         (long)commentEntity.getProperty("timestamp"),
         (String)commentEntity.getProperty("content")
       ));
@@ -75,9 +75,10 @@ public class DataServlet extends HttpServlet {
 
     String content = request.getParameter("comment-input");
     String userEmail = userService.getCurrentUser().getEmail();
+    String username = userEmail.substring(0,userEmail.indexOf('@'));
 
     Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("email", userEmail);
+    commentEntity.setProperty("username", username);
     commentEntity.setProperty("timestamp", System.currentTimeMillis());
     commentEntity.setProperty("content", content);
 

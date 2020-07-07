@@ -104,7 +104,7 @@ layout: page
         function renderComments(comments) {
             commentsSection.innerHTML = '<br><br>';
             for (var i = 0; i < comments.length; i++) {
-                commentsSection.innerHTML += comments[i]['email'].substring(0,comments[i]['email'].indexOf('@'));
+                commentsSection.innerHTML += comments[i]['username'];
                 commentsSection.innerHTML += ' on ' + new Date(comments[i]['timestamp']).toString().substring(0,15) + ':<br>';
                 commentsSection.innerHTML += comments[i]['content'] + '<br><br>';
             }
