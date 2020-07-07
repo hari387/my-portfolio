@@ -38,6 +38,11 @@ public class DataServlet extends HttpServlet {
   DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   Gson gson = new Gson();
 
+  // datastore keys for Comments
+  String usernameKey = "username";
+  String timestampKey = "timestamp";
+  String contentKey = "content";
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -52,9 +57,9 @@ public class DataServlet extends HttpServlet {
     for (Entity commentEntity : results.asIterable()) {
       if (comments.size() == maxComments) break;
       comments.add(new Comment(
-        (String)commentEntity.getProperty("username"),
-        (long)commentEntity.getProperty("timestamp"),
-        (String)commentEntity.getProperty("content")
+        (String)commentEntity.getProperty(usernameKey),
+        (long)commentEntity.getProperty(timestampKey),
+        (String)commentEntity.getProperty(contentKey)
       ));
     }
     response.setContentType("application/json;");
@@ -78,9 +83,9 @@ public class DataServlet extends HttpServlet {
     String username = userEmail.substring(0,userEmail.indexOf('@'));
 
     Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("username", username);
-    commentEntity.setProperty("timestamp", System.currentTimeMillis());
-    commentEntity.setProperty("content", content);
+    commentEntity.setProperty(usernameKey, username);
+    commentEntity.setProperty(timestampKey, System.currentTimeMillis());
+    commentEntity.setProperty(contentKey, content);
 
     datastore.put(commentEntity);
 

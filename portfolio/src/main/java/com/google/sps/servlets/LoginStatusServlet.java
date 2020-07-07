@@ -27,17 +27,18 @@ public class LoginStatusServlet extends HttpServlet {
 
   UserService userService = UserServiceFactory.getUserService();
 
+  // This is the return page after logging in or out.
+  String homeUrl = '/';
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("application/json;");
+    response.setContentType("application/json");
     if (userService.isUserLoggedIn()) {
-      String urlToRedirectToAfterUserLogsOut = "/";
-      String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
+      String logoutUrl = userService.createLogoutURL(homeUrl);
 
       response.getWriter().println("{\"loggedIn\": true, \"logoutUrl\":\"" + logoutUrl + "\"}");
     } else {
-      String urlToRedirectToAfterUserLogsIn = "/";
-      String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
+      String loginUrl = userService.createLoginURL(homeUrl);
       response.getWriter().println("{\"loggedIn\": false, \"loginUrl\":\"" + loginUrl + "\"}");
     }
   }
