@@ -43,6 +43,15 @@ public class DataServlet extends HttpServlet {
   String timestampKey = "timestamp";
   String contentKey = "content";
 
+  class ResponseStatus {
+    boolean success;
+    String errorMessage;
+    ResponseStatus(boolean success,String errorMessage){
+      this.success = success;
+      this.errorMessage = errorMessage;
+    }
+  }
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -74,7 +83,7 @@ public class DataServlet extends HttpServlet {
     if(!userService.isUserLoggedIn()){
       // If the user is not logged in, throw a 401 Unauthorized Error.
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-      response.getWriter().println("{\"success\": false, \"errorMessage\": \"Not logged in\"}");
+      response.getWriter().println(gson.toJson(new ResponseStatus(false,"Not logged in")));
       return;
     }
 
@@ -89,7 +98,7 @@ public class DataServlet extends HttpServlet {
 
     datastore.put(commentEntity);
 
-    response.getWriter().println("{\"success\": true}");
+    response.getWriter().println(gson.toJson(new ResponseStatus(true,null)));
 
   }
 }

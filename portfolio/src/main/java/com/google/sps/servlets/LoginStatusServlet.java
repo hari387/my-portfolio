@@ -14,6 +14,7 @@
 
 package com.google.sps.servlets;
 
+import com.google.gson.Gson;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
@@ -26,20 +27,35 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginStatusServlet extends HttpServlet {
 
   UserService userService = UserServiceFactory.getUserService();
+  Gson gson = new Gson();
 
   // This is the return page after logging in or out.
-  String homeUrl = '/';
+  String homeUrl = "/";
+
+  class LoginInfo {
+    boolean loggedIn;
+    String loginUrl;
+    String logoutUrl;
+    LoginInfo(boolean loggedIn, String loginUrl, String logoutUrl){
+      this.loggedIn = loggedIn;
+      this.loginUrl = loginUrl;
+      this.logoutUrl = logoutUrl;
+    }
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("application/json");
-    if (userService.isUserLoggedIn()) {
-      String logoutUrl = userService.createLogoutURL(homeUrl);
 
-      response.getWriter().println("{\"loggedIn\": true, \"logoutUrl\":\"" + logoutUrl + "\"}");
+    LoginInfo loginInfo;
+
+    if (userService.isUserLoggedIn()) {
+      loginInfo = new LoginInfo(true,null,userService.createLogoutURL(homeUrl));
     } else {
-      String loginUrl = userService.createLoginURL(homeUrl);
-      response.getWriter().println("{\"loggedIn\": false, \"loginUrl\":\"" + loginUrl + "\"}");
+      loginInfo = new LoginInfo(false,userService.createLoginURL(homeUrl),null);
     }
+
+    response.setContentType("application/json");
+    response.getWriter().println(gson.toJson(loginInfo));
+
   }
 }
