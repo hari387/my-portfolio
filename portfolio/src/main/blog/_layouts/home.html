@@ -36,26 +36,48 @@ layout: page
     <div>
         <form id="comment-form">
             <input type="text" placeholder="Comment Here" id="comment-input" />
-            <input type="button" onclick="addComment()" value="Submit" />
+            <input type="button" value="Submit" onclick="addComment()" />
             <br>
             Max Comments Displayed:
             <input type="number" value="10" min="5" max="30" id="max-comments"
-                onchange="fetch('../data?maxcomments=' + maxCommentsInput.value).then(handleResponse);" />
+                onchange="getComments()"/>
             <br>
-            <input type="button" onclick="deleteComments()" value="Delete Comments" />
         </form>
+        <div>
+            <input type="button" onclick="deleteComments()" value="Delete Comments" />
+            <br>
+            <a id="login-button" href="/" class="button">Login</a>
+            <a id="logout-button" href="/" class="button">Logout</a>
+        </div>
     </div>
     <div id='comments'>
 
     </div>
     <script>
 
+        var commentForm = document.getElementById('comment-form');
         var commentInput = document.getElementById('comment-input');
         var maxCommentsInput = document.getElementById('max-comments');
         var commentsSection = document.getElementById('comments');
+        var loginButton = document.getElementById('login-button');
+        var logoutButton = document.getElementById('logout-button');
 
         // Initial GET to display comments on page load.
         getComments();
+
+        // Get login status and hide appropriate elements.
+        fetch('../login-status')
+            .then((response) => response.json())
+            .then((loginInfo) => {
+                if(loginInfo['loggedIn']){
+                    logoutButton.href = loginInfo['logoutUrl'];
+                    loginButton.hidden = true;
+                } else {
+                    loginButton.href = loginInfo['loginUrl']
+                    logoutButton.hidden = true;
+                    commentForm.hidden = true;
+                }
+            });
 
         // Add comment on "Enter" key press.
         commentInput.addEventListener("keydown", function (event) {
@@ -73,18 +95,18 @@ layout: page
         function getComments() {
             // Double GET request is deliberately done as solution to issue #5.
             fetch('../data?maxcomments=' + maxCommentsInput.value).then(() => {
-                fetch('../data?maxcomments=' + maxCommentsInput.value).then(handleResponse);
+                fetch('../data?maxcomments=' + maxCommentsInput.value)
+                    .then((response) => response.json())
+                    .then(renderComments);
             });
         }
 
-        function handleResponse(response) {
-            response.json().then((text) => comments = text).then(renderComments);
-        }
-
-        function renderComments() {
-            commentsSection.innerHTML = '';
+        function renderComments(comments) {
+            commentsSection.innerHTML = '<br><br>';
             for (var i = 0; i < comments.length; i++) {
-                commentsSection.innerHTML += comments[i] + '<br>';
+                commentsSection.innerHTML += comments[i]['username'];
+                commentsSection.innerHTML += ' on ' + new Date(comments[i]['timestamp']).toLocaleDateString(undefined,{dateStyle:'full'}) + ':<br>';
+                commentsSection.innerHTML += comments[i]['content'] + '<br><br>';
             }
         }
 
