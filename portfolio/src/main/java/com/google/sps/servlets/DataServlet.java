@@ -39,9 +39,9 @@ public class DataServlet extends HttpServlet {
   Gson gson = new Gson();
 
   // datastore keys for Comments
-  String usernameKey = "username";
-  String timestampKey = "timestamp";
-  String contentKey = "content";
+  String final usernameKey = "username";
+  String final timestampKey = "timestamp";
+  String final contentKey = "content";
 
   class ResponseStatus {
     boolean success;

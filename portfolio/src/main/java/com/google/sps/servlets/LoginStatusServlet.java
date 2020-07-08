@@ -30,7 +30,7 @@ public class LoginStatusServlet extends HttpServlet {
   Gson gson = new Gson();
 
   // This is the return page after logging in or out.
-  String homeUrl = "/";
+  String final homeUrl = "/";
 
   class LoginInfo {
     boolean loggedIn;
