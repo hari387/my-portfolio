@@ -15,9 +15,142 @@
 package com.google.sps;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    throw new UnsupportedOperationException("TODO: Implement this method.");
+
+    System.out.println("----------------");
+
+    System.out.print("Duration required: ");
+    System.out.println(request.getDuration());
+
+    Collection<String> eventAttendees;
+    Collection<String> meetingAttendees = request.getAttendees();
+
+    if(request.getDuration() >= 24*60){
+      return new ArrayList();
+    }
+
+    if(meetingAttendees.size() == 0){
+      return Arrays.asList(TimeRange.WHOLE_DAY);
+    }
+
+    // Events containing attendees in the meeting request.
+    List<TimeRange> relevantEventTimes = new ArrayList<TimeRange>();
+
+    for(Event event : events){
+      if(event.getWhen().duration() == 0) continue;
+      eventAttendees = event.getAttendees();
+      for(String attendee : eventAttendees){
+        if(meetingAttendees.contains(attendee)){
+          relevantEventTimes.add(event.getWhen());
+          break;
+        }
+      }
+    }
+
+    printTimeRanges(relevantEventTimes);
+
+    relevantEventTimes.sort(TimeRange.ORDER_BY_START);
+
+    System.out.println("Sorted");
+
+    printTimeRanges(relevantEventTimes);
+
+    List<TimeRange> nonOverlappingTimes = new ArrayList<TimeRange>();
+
+    if(relevantEventTimes.size() == 0){
+      return Arrays.asList(TimeRange.WHOLE_DAY);
+    }
+
+    nonOverlappingTimes.add(relevantEventTimes.get(0));
+
+    TimeRange squashedTime;
+
+    for(int i = 1;i<relevantEventTimes.size();i++){
+      squashedTime = nonOverlappingTimes.get(nonOverlappingTimes.size() - 1);
+      if(relevantEventTimes.get(i).overlaps(squashedTime)){
+        nonOverlappingTimes.set(
+          nonOverlappingTimes.size() - 1,
+          TimeRange.fromStartEnd(
+            squashedTime.start(),
+            relevantEventTimes.get(i).end() > squashedTime.end() ? relevantEventTimes.get(i).end() : squashedTime.end(),
+            false
+          )
+        );
+      } else {
+        nonOverlappingTimes.add(relevantEventTimes.get(i));
+      }
+    }
+
+    System.out.println("Non overlapping");
+
+    printTimeRanges(nonOverlappingTimes);
+
+    List<TimeRange> acceptableTimes = new ArrayList<TimeRange>();
+
+    addIfAcceptable(
+      acceptableTimes,
+      TimeRange.fromStartEnd(
+        0,
+        nonOverlappingTimes.get(0).start(),
+        false
+      ),
+      request.getDuration()
+    );
+
+    for(int i = 0;i<nonOverlappingTimes.size() - 1;i++){
+      addIfAcceptable(
+        acceptableTimes,
+        TimeRange.fromStartEnd(
+          nonOverlappingTimes.get(i).end(),
+          nonOverlappingTimes.get(i+1).start(),
+          false
+        ),
+        request.getDuration()
+      );
+    }
+
+    addIfAcceptable(
+      acceptableTimes,
+      TimeRange.fromStartEnd(
+        nonOverlappingTimes.get(nonOverlappingTimes.size() - 1).end(),
+        24*60,
+        false
+      ),
+      request.getDuration()
+    );
+    System.out.println("Acceptable times");
+    printTimeRanges(acceptableTimes);
+
+    System.out.println("----------------");
+
+    return acceptableTimes;
+    
   }
+
+  public void addIfAcceptable(List<TimeRange> timeRanges, TimeRange timeRange, long duration){
+    if(timeRange.duration() >= duration){
+      timeRanges.add(timeRange);
+    }
+  }
+
+  public void printTimeRanges(Collection<TimeRange> timeRanges){
+    for(TimeRange t : timeRanges){
+      int startHr = t.start() / 60;
+      int startMin = t.start() % 60;
+      int endHr = t.end() / 60;
+      int endMin = t.end() % 60;
+      
+      System.out.printf("%d:%d to %d:%d\n",startHr,startMin,endHr,endMin);
+    }
+  }
+
 }
