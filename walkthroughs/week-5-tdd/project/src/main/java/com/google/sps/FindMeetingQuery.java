@@ -24,15 +24,23 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 public final class FindMeetingQuery {
+
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
+    Collection<TimeRange> acceptableTimes = modifiableQuery(events, request, true);
+    if(request.getAttendees().size() > 0 && acceptableTimes.size() == 0){
+      acceptableTimes = modifiableQuery(events, request, false);
+    }
+    return acceptableTimes;
+  }
 
-    System.out.println("----------------");
-
-    System.out.print("Duration required: ");
-    System.out.println(request.getDuration());
+  private Collection<TimeRange> modifiableQuery(Collection<Event> events, MeetingRequest request, boolean optional) {
 
     Collection<String> eventAttendees;
-    Collection<String> meetingAttendees = request.getAttendees();
+    Collection<String> meetingAttendees = new ArrayList<String>(request.getAttendees());
+    
+    if(optional){
+      meetingAttendees.addAll(request.getOptionalAttendees());
+    }
 
     if(request.getDuration() >= 24*60){
       return new ArrayList();
@@ -56,13 +64,7 @@ public final class FindMeetingQuery {
       }
     }
 
-    printTimeRanges(relevantEventTimes);
-
     relevantEventTimes.sort(TimeRange.ORDER_BY_START);
-
-    System.out.println("Sorted");
-
-    printTimeRanges(relevantEventTimes);
 
     List<TimeRange> nonOverlappingTimes = new ArrayList<TimeRange>();
 
@@ -89,10 +91,6 @@ public final class FindMeetingQuery {
         nonOverlappingTimes.add(relevantEventTimes.get(i));
       }
     }
-
-    System.out.println("Non overlapping");
-
-    printTimeRanges(nonOverlappingTimes);
 
     List<TimeRange> acceptableTimes = new ArrayList<TimeRange>();
 
@@ -127,13 +125,8 @@ public final class FindMeetingQuery {
       ),
       request.getDuration()
     );
-    System.out.println("Acceptable times");
-    printTimeRanges(acceptableTimes);
-
-    System.out.println("----------------");
 
     return acceptableTimes;
-    
   }
 
   public void addIfAcceptable(List<TimeRange> timeRanges, TimeRange timeRange, long duration){
