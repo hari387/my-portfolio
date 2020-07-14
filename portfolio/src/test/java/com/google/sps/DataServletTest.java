@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -29,6 +31,7 @@ import org.junit.runners.JUnit4;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -56,9 +59,11 @@ public final class DataServletTest {
       new LocalUserServiceTestConfig()
     );
 
-  private final DataServlet dataServlet = new DataServlet();
-  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  private final UserService userService = UserServiceFactory.getUserService();
+  private static final Gson gson = new Gson();
+
+  private static final DataServlet dataServlet = new DataServlet();
+  private static final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private static final UserService userService = UserServiceFactory.getUserService();
 
   private static Entity COMMENT_ENTITY_1;
 
@@ -129,18 +134,39 @@ public final class DataServletTest {
   public void getMaxLessThanExisting() {
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
-    /*
+
+    StringWriter actualStringWriter = new StringWriter();
+    PrintWriter actualPrintWriter = new PrintWriter(actualStringWriter);
+
+    when(request.getParameter("maxcomments")).thenReturn("3");
+    
     dataServlet.addComment(COMMENT_1);
     dataServlet.addComment(COMMENT_2);
     dataServlet.addComment(COMMENT_3);
     dataServlet.addComment(COMMENT_4);
     dataServlet.addComment(COMMENT_5);
     dataServlet.addComment(COMMENT_6);
-    dataServlet.addComment(COMMENT_7);*/
-
-    when(request.getParameter("maxcomments")).thenReturn("3");
+    dataServlet.addComment(COMMENT_7);
 
 
+    ArrayList<Comment> expectedComments = new ArrayList();
+    expectedComments.add(COMMENT_7);
+    expectedComments.add(COMMENT_6);
+    expectedComments.add(COMMENT_5);
+
+    StringWriter expectedStringWriter = new StringWriter();
+    PrintWriter expectedPrintWriter = new PrintWriter(expectedStringWriter);
+
+    expectedPrintWriter.println(gson.toJson(expectedComments));
+
+    try {
+      when(response.getWriter()).thenReturn(actualPrintWriter);
+
+      dataServlet.doGet(request,response);
+      Assert.assertEquals(expectedStringWriter.toString(),actualStringWriter.toString());
+    } catch(Exception e) {
+      System.out.println(e);
+    }
 
   }
 }
