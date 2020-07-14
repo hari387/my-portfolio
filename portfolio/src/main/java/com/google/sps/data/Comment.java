@@ -15,6 +15,13 @@
 package com.google.sps.data;
 
 public class Comment {
+
+  // datastore keys for Comments
+  public static final String USERNAME_KEY = "username";
+  public static final String TIMESTAMP_KEY = "timestamp";
+  public static final String CONTENT_KEY = "content";
+  public static final String TYPE = "Comment";
+
   public String username;
   public long timestamp;
   public String content;

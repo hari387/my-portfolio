@@ -19,13 +19,16 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -38,16 +41,13 @@ public class DataServlet extends HttpServlet {
   DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   Gson gson = new Gson();
 
-  // datastore keys for Comments
-  String usernameKey = "username";
-  String timestampKey = "timestamp";
-  String contentKey = "content";
-
   class ResponseStatus {
     boolean success;
+    long keyId;
     String errorMessage;
-    ResponseStatus(boolean success,String errorMessage){
+    ResponseStatus(boolean success,long keyId,String errorMessage){
       this.success = success;
+      this.keyId = keyId;
       this.errorMessage = errorMessage;
     }
   }
@@ -58,21 +58,27 @@ public class DataServlet extends HttpServlet {
     int maxComments = Integer.parseInt(request.getParameter("maxcomments"));
     ArrayList<Comment> comments = new ArrayList<Comment>();
 
-    // Sort the query so we will be adding newest comments first.
+    // Sort the query so we will be adding newest comments first,
+    // and set the query limit to maxComments using FetchOptions.
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-    PreparedQuery results = datastore.prepare(query);
+    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(maxComments));
 
-    // Gets content of newest comments according to maxComments specified by request.
-    for (Entity commentEntity : results.asIterable()) {
-      if (comments.size() == maxComments) break;
-      comments.add(new Comment(
-        (String)commentEntity.getProperty(usernameKey),
-        (long)commentEntity.getProperty(timestampKey),
-        (String)commentEntity.getProperty(contentKey)
-      ));
+    // Convert Entities from query into Comments.
+    for (Entity commentEntity : results) {
+      comments.add(getCommentFromEntity(commentEntity));
     }
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(comments));
+  }
+
+  public Comment getCommentFromEntity(Entity commentEntity) {
+    Comment comment = new Comment(
+        (String)commentEntity.getProperty(Comment.USERNAME_KEY),
+        (long)commentEntity.getProperty(Comment.TIMESTAMP_KEY),
+        (String)commentEntity.getProperty(Comment.CONTENT_KEY)
+    );
+
+    return comment;
   }
 
   @Override
@@ -83,22 +89,29 @@ public class DataServlet extends HttpServlet {
     if(!userService.isUserLoggedIn()){
       // If the user is not logged in, throw a 401 Unauthorized Error.
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-      response.getWriter().println(gson.toJson(new ResponseStatus(false,"Not logged in")));
+      response.getWriter().println(gson.toJson(new ResponseStatus(false,0,"Not logged in")));
       return;
     }
 
-    String content = request.getParameter("comment-input");
-    String userEmail = userService.getCurrentUser().getEmail();
-    String username = userEmail.substring(0,userEmail.indexOf('@'));
+    final String userEmail = userService.getCurrentUser().getEmail();
+    final String username = userEmail.substring(0,userEmail.indexOf('@'));
+    final long timestamp = System.currentTimeMillis();
+    final String content = request.getParameter("comment-input");
 
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty(usernameKey, username);
-    commentEntity.setProperty(timestampKey, System.currentTimeMillis());
-    commentEntity.setProperty(contentKey, content);
+    final Comment comment = new Comment(userEmail,timestamp,content);
 
-    datastore.put(commentEntity);
+    final long keyId = addComment(comment).getId();
 
-    response.getWriter().println(gson.toJson(new ResponseStatus(true,null)));
+    response.getWriter().println(gson.toJson(new ResponseStatus(true,keyId,null)));
+  }
 
+  public Key addComment(Comment comment) {
+    final Entity commentEntity = new Entity("Comment");
+    
+    commentEntity.setProperty(Comment.USERNAME_KEY,comment.username);
+    commentEntity.setProperty(Comment.TIMESTAMP_KEY,comment.timestamp);
+    commentEntity.setProperty(Comment.CONTENT_KEY,comment.content);
+
+    return datastore.put(commentEntity);
   }
 }

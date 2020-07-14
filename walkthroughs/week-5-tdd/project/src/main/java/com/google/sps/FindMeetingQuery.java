@@ -33,12 +33,12 @@ public final class FindMeetingQuery {
     return acceptableTimes;
   }
 
-  private Collection<TimeRange> modifiableQuery(Collection<Event> events, MeetingRequest request, boolean optional) {
+  private Collection<TimeRange> modifiableQuery(Collection<Event> events, MeetingRequest request, boolean optionalAttendeesConsidered) {
 
     Collection<String> eventAttendees;
     Collection<String> meetingAttendees = new ArrayList<String>(request.getAttendees());
     
-    if(optional){
+    if(optionalAttendeesConsidered){
       meetingAttendees.addAll(request.getOptionalAttendees());
     }
 
