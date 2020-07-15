@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -65,6 +66,8 @@ public final class DataServletTest {
   private static final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private static final UserService userService = UserServiceFactory.getUserService();
 
+  private static final String USER_1 = "wildernessfly@gmail.com";
+
   private static Entity COMMENT_ENTITY_1;
 
   private static final Comment COMMENT_1 = new Comment("wildernessfly",24898942,"This is wildernessfly commenting");
@@ -90,12 +93,14 @@ public final class DataServletTest {
     helper.setEnvEmail(userEmail);
     helper.setEnvIsLoggedIn(true);
     helper.setEnvIsAdmin(isAdmin);
+    helper.setEnvAuthDomain("gmail");
   }
 
   private void logout() {
     helper.setEnvEmail("");
     helper.setEnvIsLoggedIn(false);
     helper.setEnvIsAdmin(false);
+    helper.setEnvAuthDomain("");
   }
 
   @Test
@@ -131,7 +136,7 @@ public final class DataServletTest {
   }
 
   @Test
-  public void getMaxLessThanExisting() {
+  public void getMaxLessThanExistingTest() {
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
 
@@ -140,8 +145,6 @@ public final class DataServletTest {
 
     when(request.getParameter("maxcomments")).thenReturn("3");
     
-    dataServlet.addComment(COMMENT_1);
-    dataServlet.addComment(COMMENT_2);
     dataServlet.addComment(COMMENT_3);
     dataServlet.addComment(COMMENT_4);
     dataServlet.addComment(COMMENT_5);
@@ -149,10 +152,8 @@ public final class DataServletTest {
     dataServlet.addComment(COMMENT_7);
 
 
-    ArrayList<Comment> expectedComments = new ArrayList();
-    expectedComments.add(COMMENT_7);
-    expectedComments.add(COMMENT_6);
-    expectedComments.add(COMMENT_5);
+    ArrayList<Comment> expectedComments = 
+      new ArrayList(Arrays.asList(COMMENT_7,COMMENT_6,COMMENT_5));
 
     StringWriter expectedStringWriter = new StringWriter();
     PrintWriter expectedPrintWriter = new PrintWriter(expectedStringWriter);
@@ -161,12 +162,115 @@ public final class DataServletTest {
 
     try {
       when(response.getWriter()).thenReturn(actualPrintWriter);
-
       dataServlet.doGet(request,response);
-      Assert.assertEquals(expectedStringWriter.toString(),actualStringWriter.toString());
-    } catch(Exception e) {
+    } catch(IOException e) {
+      System.out.println("------IOException------");
       System.out.println(e);
+      System.out.println("-----------------------");
     }
+
+    Assert.assertEquals(expectedStringWriter.toString(),actualStringWriter.toString());
+  }
+
+  @Test
+  public void getMaxMoreThanExistingTest() {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    HttpServletResponse response = mock(HttpServletResponse.class);
+
+    StringWriter actualStringWriter = new StringWriter();
+    PrintWriter actualPrintWriter = new PrintWriter(actualStringWriter);
+
+    when(request.getParameter("maxcomments")).thenReturn("10");
+    
+    dataServlet.addComment(COMMENT_3);
+    dataServlet.addComment(COMMENT_4);
+    dataServlet.addComment(COMMENT_5);
+    dataServlet.addComment(COMMENT_6);
+    dataServlet.addComment(COMMENT_7);
+
+
+    ArrayList<Comment> expectedComments = 
+      new ArrayList(Arrays.asList(COMMENT_7,COMMENT_6,COMMENT_5,COMMENT_4,COMMENT_3));
+
+    StringWriter expectedStringWriter = new StringWriter();
+    PrintWriter expectedPrintWriter = new PrintWriter(expectedStringWriter);
+
+    expectedPrintWriter.println(gson.toJson(expectedComments));
+
+    try {
+      when(response.getWriter()).thenReturn(actualPrintWriter);
+      dataServlet.doGet(request,response);
+    } catch(IOException e) {
+      System.out.println("------IOException------");
+      System.out.println(e);
+      System.out.println("-----------------------");
+    }
+
+    Assert.assertEquals(expectedStringWriter.toString(),actualStringWriter.toString());
+  }
+
+  @Test
+  public void postCommentWhileLoggedInTest() {
+    login(USER_1,false);
+
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    HttpServletResponse response = mock(HttpServletResponse.class);
+
+    StringWriter actualStringWriter = new StringWriter();
+    PrintWriter actualPrintWriter = new PrintWriter(actualStringWriter);
+
+    when(request.getParameter("comment-input")).thenReturn(COMMENT_1.content);
+    try {
+      when(response.getWriter()).thenReturn(actualPrintWriter);
+      dataServlet.doPost(request,response);
+    } catch(IOException e) {
+      System.out.println("------IOException------");
+      System.out.println(e);
+      System.out.println("-----------------------");
+    }
+
+    String responseStatusJson = actualStringWriter.toString();
+    DataServlet.ResponseStatus responseStatus = gson.fromJson(responseStatusJson,DataServlet.ResponseStatus.class);
+
+    Assert.assertTrue(responseStatus.success);
+    Assert.assertEquals(null,responseStatus.errorMessage);
+
+    Query query = new Query("Comment");
+    Entity commentEntity = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults()).get(0);
+
+    Assert.assertEquals(COMMENT_1.username,commentEntity.getProperty(Comment.USERNAME_KEY));
+    Assert.assertEquals(COMMENT_1.content,commentEntity.getProperty(Comment.CONTENT_KEY));
+    logout();
+  }
+
+  @Test
+  public void postCommentWhileLoggedOutTest() {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    HttpServletResponse response = mock(HttpServletResponse.class);
+
+    StringWriter actualStringWriter = new StringWriter();
+    PrintWriter actualPrintWriter = new PrintWriter(actualStringWriter);
+
+    when(request.getParameter("comment-input")).thenReturn(COMMENT_1.content);
+    try {
+      when(response.getWriter()).thenReturn(actualPrintWriter);
+      dataServlet.doPost(request,response);
+    } catch(IOException e) {
+      System.out.println("------IOException------");
+      System.out.println(e);
+      System.out.println("-----------------------");
+    }
+
+    String responseStatusJson = actualStringWriter.toString();
+    DataServlet.ResponseStatus responseStatus = gson.fromJson(responseStatusJson,DataServlet.ResponseStatus.class);
+
+    Assert.assertFalse(responseStatus.success);
+    Assert.assertEquals(DataServlet.ResponseStatus.NOT_LOGGED_IN,responseStatus.errorMessage);
+
+    Query query = new Query("Comment");
+    List<Entity> commentEntities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+
+    Assert.assertEquals(0,commentEntities.size());
 
   }
 }

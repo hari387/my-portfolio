@@ -41,7 +41,8 @@ public class DataServlet extends HttpServlet {
   DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   Gson gson = new Gson();
 
-  class ResponseStatus {
+  protected class ResponseStatus {
+    static final String NOT_LOGGED_IN = "Not logged in";
     boolean success;
     long keyId;
     String errorMessage;
@@ -89,7 +90,7 @@ public class DataServlet extends HttpServlet {
     if(!userService.isUserLoggedIn()){
       // If the user is not logged in, throw a 401 Unauthorized Error.
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-      response.getWriter().println(gson.toJson(new ResponseStatus(false,0,"Not logged in")));
+      response.getWriter().println(gson.toJson(new ResponseStatus(false,0,ResponseStatus.NOT_LOGGED_IN)));
       return;
     }
 
@@ -98,7 +99,7 @@ public class DataServlet extends HttpServlet {
     final long timestamp = System.currentTimeMillis();
     final String content = request.getParameter("comment-input");
 
-    final Comment comment = new Comment(userEmail,timestamp,content);
+    final Comment comment = new Comment(username,timestamp,content);
 
     final long keyId = addComment(comment).getId();
 
