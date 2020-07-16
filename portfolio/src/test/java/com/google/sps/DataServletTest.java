@@ -68,8 +68,6 @@ public final class DataServletTest {
 
   private static final String USER_1 = "wildernessfly@gmail.com";
 
-  private static Entity COMMENT_ENTITY_1;
-
   private static final Comment COMMENT_1 = new Comment("wildernessfly",24898942,"This is wildernessfly commenting");
   private static final Comment COMMENT_2 = new Comment("neptunedory",25898942,"This is neptunedory commenting");
   private static final Comment COMMENT_3 = new Comment("thegeneralcat",26898942,"This is thegeneralcat commenting");
@@ -81,7 +79,6 @@ public final class DataServletTest {
   @Before
   public void setUp() {
     helper.setUp();
-
   }
 
   @After
@@ -111,7 +108,7 @@ public final class DataServletTest {
 
   @Test
   public void getCommentFromEntityTest() {
-    COMMENT_ENTITY_1 = new Entity(Comment.TYPE);
+    Entity COMMENT_ENTITY_1 = new Entity(Comment.TYPE);
     COMMENT_ENTITY_1.setProperty(Comment.USERNAME_KEY,COMMENT_1.username);
     COMMENT_ENTITY_1.setProperty(Comment.TIMESTAMP_KEY,COMMENT_1.timestamp);
     COMMENT_ENTITY_1.setProperty(Comment.CONTENT_KEY,COMMENT_1.content);
@@ -146,11 +143,11 @@ public final class DataServletTest {
 
     when(request.getParameter("maxcomments")).thenReturn("3");
     
-    dataServlet.addComment(COMMENT_3);
-    dataServlet.addComment(COMMENT_4);
-    dataServlet.addComment(COMMENT_5);
     dataServlet.addComment(COMMENT_6);
+    dataServlet.addComment(COMMENT_3);
     dataServlet.addComment(COMMENT_7);
+    dataServlet.addComment(COMMENT_1);
+    dataServlet.addComment(COMMENT_5);
 
 
     ArrayList<Comment> expectedComments = 
@@ -177,15 +174,15 @@ public final class DataServletTest {
 
     when(request.getParameter("maxcomments")).thenReturn("10");
     
-    dataServlet.addComment(COMMENT_3);
+    dataServlet.addComment(COMMENT_2);
     dataServlet.addComment(COMMENT_4);
+    dataServlet.addComment(COMMENT_1);
     dataServlet.addComment(COMMENT_5);
-    dataServlet.addComment(COMMENT_6);
     dataServlet.addComment(COMMENT_7);
 
 
     ArrayList<Comment> expectedComments = 
-      new ArrayList(Arrays.asList(COMMENT_7,COMMENT_6,COMMENT_5,COMMENT_4,COMMENT_3));
+      new ArrayList(Arrays.asList(COMMENT_7,COMMENT_5,COMMENT_4,COMMENT_2,COMMENT_1));
 
     StringWriter expectedStringWriter = new StringWriter();
     PrintWriter expectedPrintWriter = new PrintWriter(expectedStringWriter);
