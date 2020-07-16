@@ -103,6 +103,12 @@ public final class DataServletTest {
     helper.setEnvAuthDomain("");
   }
 
+  private void compareComment(Comment expected, Comment actual) {
+    Assert.assertEquals(expected.username, actual.username);
+    Assert.assertEquals(expected.timestamp, actual.timestamp);
+    Assert.assertEquals(expected.content, actual.content);
+  }
+
   @Test
   public void getCommentFromEntityTest() {
     COMMENT_ENTITY_1 = new Entity(Comment.TYPE);
@@ -112,9 +118,7 @@ public final class DataServletTest {
     
     Comment comment = dataServlet.getCommentFromEntity(COMMENT_ENTITY_1);
 
-    Assert.assertEquals(COMMENT_1.username,comment.username);
-    Assert.assertEquals(COMMENT_1.timestamp,comment.timestamp);
-    Assert.assertEquals(COMMENT_1.content,comment.content);
+    compareComment(COMMENT_1, comment);
   }
 
   @Test
@@ -129,10 +133,7 @@ public final class DataServletTest {
     Comment comment = dataServlet.getCommentFromEntity(results.get(0));
 
     Assert.assertEquals(commentKey,commentEntity.getKey());
-    Assert.assertEquals(COMMENT_1.username,comment.username);
-    Assert.assertEquals(COMMENT_1.timestamp,comment.timestamp);
-    Assert.assertEquals(COMMENT_1.content,comment.content);
-
+    compareComment(COMMENT_1,comment);
   }
 
   @Test
