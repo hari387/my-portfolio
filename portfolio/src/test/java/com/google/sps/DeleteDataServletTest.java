@@ -89,7 +89,7 @@ public final class DeleteDataServletTest {
   }
 
   @Test
-  public void deleteCommentsPostTest() {
+  public void deleteCommentsPostTest() throws IOException {
     dataServlet.addComment(COMMENT_1);
     dataServlet.addComment(COMMENT_2);
     dataServlet.addComment(COMMENT_3);
@@ -103,13 +103,7 @@ public final class DeleteDataServletTest {
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
 
-    try{
-      deleteDataServlet.doPost(request,response);
-    } catch(IOException e){
-      System.out.println("------IOException------");
-      System.out.println(e);
-      System.out.println("-----------------------");
-    }
+    deleteDataServlet.doPost(request,response);
   
     commentEntities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 

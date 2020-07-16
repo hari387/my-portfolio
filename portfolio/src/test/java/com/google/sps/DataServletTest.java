@@ -118,7 +118,7 @@ public final class DataServletTest {
   }
 
   @Test
-  public void addCommentTest() {
+  public void addCommentTest() throws IOException {
     Key commentKey = dataServlet.addComment(COMMENT_1);
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
@@ -136,7 +136,7 @@ public final class DataServletTest {
   }
 
   @Test
-  public void getMaxLessThanExistingTest() {
+  public void getMaxLessThanExistingTest() throws IOException {
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
 
@@ -160,20 +160,14 @@ public final class DataServletTest {
 
     expectedPrintWriter.println(gson.toJson(expectedComments));
 
-    try {
-      when(response.getWriter()).thenReturn(actualPrintWriter);
-      dataServlet.doGet(request,response);
-    } catch(IOException e) {
-      System.out.println("------IOException------");
-      System.out.println(e);
-      System.out.println("-----------------------");
-    }
+    when(response.getWriter()).thenReturn(actualPrintWriter);
+    dataServlet.doGet(request,response);
 
     Assert.assertEquals(expectedStringWriter.toString(),actualStringWriter.toString());
   }
 
   @Test
-  public void getMaxMoreThanExistingTest() {
+  public void getMaxMoreThanExistingTest() throws IOException {
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
 
@@ -197,20 +191,14 @@ public final class DataServletTest {
 
     expectedPrintWriter.println(gson.toJson(expectedComments));
 
-    try {
-      when(response.getWriter()).thenReturn(actualPrintWriter);
-      dataServlet.doGet(request,response);
-    } catch(IOException e) {
-      System.out.println("------IOException------");
-      System.out.println(e);
-      System.out.println("-----------------------");
-    }
+    when(response.getWriter()).thenReturn(actualPrintWriter);
+    dataServlet.doGet(request,response);
 
     Assert.assertEquals(expectedStringWriter.toString(),actualStringWriter.toString());
   }
 
   @Test
-  public void postCommentWhileLoggedInTest() {
+  public void postCommentWhileLoggedInTest() throws IOException {
     login(USER_1,false);
 
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -220,14 +208,8 @@ public final class DataServletTest {
     PrintWriter actualPrintWriter = new PrintWriter(actualStringWriter);
 
     when(request.getParameter("comment-input")).thenReturn(COMMENT_1.content);
-    try {
-      when(response.getWriter()).thenReturn(actualPrintWriter);
-      dataServlet.doPost(request,response);
-    } catch(IOException e) {
-      System.out.println("------IOException------");
-      System.out.println(e);
-      System.out.println("-----------------------");
-    }
+    when(response.getWriter()).thenReturn(actualPrintWriter);
+    dataServlet.doPost(request,response);
 
     String responseStatusJson = actualStringWriter.toString();
     DataServlet.ResponseStatus responseStatus = gson.fromJson(responseStatusJson,DataServlet.ResponseStatus.class);
@@ -244,7 +226,7 @@ public final class DataServletTest {
   }
 
   @Test
-  public void postCommentWhileLoggedOutTest() {
+  public void postCommentWhileLoggedOutTest() throws IOException {
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
 
@@ -252,14 +234,8 @@ public final class DataServletTest {
     PrintWriter actualPrintWriter = new PrintWriter(actualStringWriter);
 
     when(request.getParameter("comment-input")).thenReturn(COMMENT_1.content);
-    try {
-      when(response.getWriter()).thenReturn(actualPrintWriter);
-      dataServlet.doPost(request,response);
-    } catch(IOException e) {
-      System.out.println("------IOException------");
-      System.out.println(e);
-      System.out.println("-----------------------");
-    }
+    when(response.getWriter()).thenReturn(actualPrintWriter);
+    dataServlet.doPost(request,response);
 
     String responseStatusJson = actualStringWriter.toString();
     DataServlet.ResponseStatus responseStatus = gson.fromJson(responseStatusJson,DataServlet.ResponseStatus.class);
