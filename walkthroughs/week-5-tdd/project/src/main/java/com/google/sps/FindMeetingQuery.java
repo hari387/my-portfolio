@@ -42,7 +42,7 @@ public final class FindMeetingQuery {
       meetingAttendees.addAll(request.getOptionalAttendees());
     }
 
-    if(request.getDuration() >= 24*60){
+    if(request.getDuration() > 24*60){
       return new ArrayList();
     }
 
@@ -64,13 +64,13 @@ public final class FindMeetingQuery {
       }
     }
 
-    relevantEventTimes.sort(TimeRange.ORDER_BY_START);
-
-    List<TimeRange> nonOverlappingTimes = new ArrayList<TimeRange>();
-
     if(relevantEventTimes.size() == 0){
       return Arrays.asList(TimeRange.WHOLE_DAY);
     }
+
+    relevantEventTimes.sort(TimeRange.ORDER_BY_START);
+
+    List<TimeRange> nonOverlappingTimes = new ArrayList<TimeRange>();
 
     nonOverlappingTimes.add(relevantEventTimes.get(0));
 
@@ -92,17 +92,13 @@ public final class FindMeetingQuery {
       }
     }
 
-    List<TimeRange> acceptableTimes = new ArrayList<TimeRange>();
+    // Add TimeRanges for the beginning and end of day
+    // so the loop considers time between the beginning of the day and first event
+    // and time between last event and the end of the day.
+    nonOverlappingTimes.add(TimeRange.fromStartDuration(0,0));
+    nonOverlappingTimes.add(TimeRange.fromStartDuration(24*60,0));
 
-    addIfAcceptable(
-      acceptableTimes,
-      TimeRange.fromStartEnd(
-        0,
-        nonOverlappingTimes.get(0).start(),
-        false
-      ),
-      request.getDuration()
-    );
+    List<TimeRange> acceptableTimes = new ArrayList<TimeRange>();
 
     for(int i = 0;i<nonOverlappingTimes.size() - 1;i++){
       addIfAcceptable(
@@ -115,16 +111,6 @@ public final class FindMeetingQuery {
         request.getDuration()
       );
     }
-
-    addIfAcceptable(
-      acceptableTimes,
-      TimeRange.fromStartEnd(
-        nonOverlappingTimes.get(nonOverlappingTimes.size() - 1).end(),
-        24*60,
-        false
-      ),
-      request.getDuration()
-    );
 
     return acceptableTimes;
   }
