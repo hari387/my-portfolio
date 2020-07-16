@@ -134,16 +134,4 @@ public final class FindMeetingQuery {
       timeRanges.add(timeRange);
     }
   }
-
-  public void printTimeRanges(Collection<TimeRange> timeRanges){
-    for(TimeRange t : timeRanges){
-      int startHr = t.start() / 60;
-      int startMin = t.start() % 60;
-      int endHr = t.end() / 60;
-      int endMin = t.end() % 60;
-      
-      System.out.printf("%d:%d to %d:%d\n",startHr,startMin,endHr,endMin);
-    }
-  }
-
 }
