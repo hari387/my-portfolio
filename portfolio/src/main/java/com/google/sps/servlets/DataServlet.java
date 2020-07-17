@@ -46,7 +46,7 @@ public class DataServlet extends HttpServlet {
     boolean success;
     long keyId;
     String errorMessage;
-    ResponseStatus(boolean success,long keyId,String errorMessage){
+    ResponseStatus(boolean success, long keyId, String errorMessage){
       this.success = success;
       this.keyId = keyId;
       this.errorMessage = errorMessage;
@@ -90,28 +90,28 @@ public class DataServlet extends HttpServlet {
     if(!userService.isUserLoggedIn()){
       // If the user is not logged in, throw a 401 Unauthorized Error.
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-      response.getWriter().println(gson.toJson(new ResponseStatus(false,0,ResponseStatus.NOT_LOGGED_IN)));
+      response.getWriter().println(gson.toJson(new ResponseStatus(false, 0, ResponseStatus.NOT_LOGGED_IN)));
       return;
     }
 
     final String userEmail = userService.getCurrentUser().getEmail();
-    final String username = userEmail.substring(0,userEmail.indexOf('@'));
+    final String username = userEmail.substring(0, userEmail.indexOf('@'));
     final long timestamp = System.currentTimeMillis();
     final String content = request.getParameter("comment-input");
 
-    final Comment comment = new Comment(username,timestamp,content);
+    final Comment comment = new Comment(username, timestamp, content);
 
     final long keyId = addComment(comment).getId();
 
-    response.getWriter().println(gson.toJson(new ResponseStatus(true,keyId,null)));
+    response.getWriter().println(gson.toJson(new ResponseStatus(true, keyId, null)));
   }
 
   public Key addComment(Comment comment) {
     final Entity commentEntity = new Entity("Comment");
     
-    commentEntity.setProperty(Comment.USERNAME_KEY,comment.username);
-    commentEntity.setProperty(Comment.TIMESTAMP_KEY,comment.timestamp);
-    commentEntity.setProperty(Comment.CONTENT_KEY,comment.content);
+    commentEntity.setProperty(Comment.USERNAME_KEY, comment.username);
+    commentEntity.setProperty(Comment.TIMESTAMP_KEY, comment.timestamp);
+    commentEntity.setProperty(Comment.CONTENT_KEY, comment.content);
 
     return datastore.put(commentEntity);
   }

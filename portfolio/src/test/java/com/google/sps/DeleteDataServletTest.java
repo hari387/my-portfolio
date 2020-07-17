@@ -7,7 +7,7 @@
 //     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
+// distributed under the License is distributed on an "AS IS" BASIS, 
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
@@ -56,7 +56,7 @@ public final class DeleteDataServletTest {
   
   private LocalServiceTestHelper helper = 
     new LocalServiceTestHelper(
-      new LocalDatastoreServiceTestConfig(),
+      new LocalDatastoreServiceTestConfig(), 
       new LocalUserServiceTestConfig()
     );
 
@@ -69,13 +69,13 @@ public final class DeleteDataServletTest {
 
   private static final String USER_1 = "wildernessfly@gmail.com";
 
-  private static final Comment COMMENT_1 = new Comment("wildernessfly",24898942,"This is wildernessfly commenting");
-  private static final Comment COMMENT_2 = new Comment("neptunedory",25898942,"This is neptunedory commenting");
-  private static final Comment COMMENT_3 = new Comment("thegeneralcat",26898942,"This is thegeneralcat commenting");
-  private static final Comment COMMENT_4 = new Comment("puddingbagel",27898942,"This is puddingbagel commenting");
-  private static final Comment COMMENT_5 = new Comment("netappledog",28898942,"This is netappledog commenting");
-  private static final Comment COMMENT_6 = new Comment("floralmirnix",29898942,"This is floralmirnix commenting");
-  private static final Comment COMMENT_7 = new Comment("pigwafflesant",30898942,"This is pigwafflesant commenting");
+  private static final Comment COMMENT_1 = new Comment("wildernessfly", 24898942, "This is wildernessfly commenting");
+  private static final Comment COMMENT_2 = new Comment("neptunedory", 25898942, "This is neptunedory commenting");
+  private static final Comment COMMENT_3 = new Comment("thegeneralcat", 26898942, "This is thegeneralcat commenting");
+  private static final Comment COMMENT_4 = new Comment("puddingbagel", 27898942, "This is puddingbagel commenting");
+  private static final Comment COMMENT_5 = new Comment("netappledog", 28898942, "This is netappledog commenting");
+  private static final Comment COMMENT_6 = new Comment("floralmirnix", 29898942, "This is floralmirnix commenting");
+  private static final Comment COMMENT_7 = new Comment("pigwafflesant", 30898942, "This is pigwafflesant commenting");
 
   @Before
   public void setUp() {
@@ -98,15 +98,15 @@ public final class DeleteDataServletTest {
     Query query = new Query("Comment");
     List<Entity> commentEntities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 
-    Assert.assertEquals(4,commentEntities.size());
+    Assert.assertEquals(4, commentEntities.size());
 
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
 
-    deleteDataServlet.doPost(request,response);
+    deleteDataServlet.doPost(request, response);
   
     commentEntities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 
-    Assert.assertEquals(0,commentEntities.size());
+    Assert.assertEquals(0, commentEntities.size());
   }
 }

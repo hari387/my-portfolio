@@ -49,9 +49,9 @@ public class LoginStatusServlet extends HttpServlet {
     LoginInfo loginInfo;
 
     if (userService.isUserLoggedIn()) {
-      loginInfo = new LoginInfo(true,null,userService.createLogoutURL(homeUrl));
+      loginInfo = new LoginInfo(true, null, userService.createLogoutURL(homeUrl));
     } else {
-      loginInfo = new LoginInfo(false,userService.createLoginURL(homeUrl),null);
+      loginInfo = new LoginInfo(false, userService.createLoginURL(homeUrl), null);
     }
 
     response.setContentType("application/json");

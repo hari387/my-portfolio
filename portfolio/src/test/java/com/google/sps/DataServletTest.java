@@ -7,7 +7,7 @@
 //     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
+// distributed under the License is distributed on an "AS IS" BASIS, 
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
@@ -56,7 +56,7 @@ public final class DataServletTest {
   
   private LocalServiceTestHelper helper = 
     new LocalServiceTestHelper(
-      new LocalDatastoreServiceTestConfig(),
+      new LocalDatastoreServiceTestConfig(), 
       new LocalUserServiceTestConfig()
     );
 
@@ -68,13 +68,13 @@ public final class DataServletTest {
 
   private static final String USER_1 = "wildernessfly@gmail.com";
 
-  private static final Comment COMMENT_1 = new Comment("wildernessfly",24898942,"This is wildernessfly commenting");
-  private static final Comment COMMENT_2 = new Comment("neptunedory",25898942,"This is neptunedory commenting");
-  private static final Comment COMMENT_3 = new Comment("thegeneralcat",26898942,"This is thegeneralcat commenting");
-  private static final Comment COMMENT_4 = new Comment("puddingbagel",27898942,"This is puddingbagel commenting");
-  private static final Comment COMMENT_5 = new Comment("netappledog",28898942,"This is netappledog commenting");
-  private static final Comment COMMENT_6 = new Comment("floralmirnix",29898942,"This is floralmirnix commenting");
-  private static final Comment COMMENT_7 = new Comment("pigwafflesant",30898942,"This is pigwafflesant commenting");
+  private static final Comment COMMENT_1 = new Comment("wildernessfly", 24898942, "This is wildernessfly commenting");
+  private static final Comment COMMENT_2 = new Comment("neptunedory", 25898942, "This is neptunedory commenting");
+  private static final Comment COMMENT_3 = new Comment("thegeneralcat", 26898942, "This is thegeneralcat commenting");
+  private static final Comment COMMENT_4 = new Comment("puddingbagel", 27898942, "This is puddingbagel commenting");
+  private static final Comment COMMENT_5 = new Comment("netappledog", 28898942, "This is netappledog commenting");
+  private static final Comment COMMENT_6 = new Comment("floralmirnix", 29898942, "This is floralmirnix commenting");
+  private static final Comment COMMENT_7 = new Comment("pigwafflesant", 30898942, "This is pigwafflesant commenting");
 
   @Before
   public void setUp() {
@@ -109,9 +109,9 @@ public final class DataServletTest {
   @Test
   public void getCommentFromEntityTest() {
     Entity COMMENT_ENTITY_1 = new Entity(Comment.TYPE);
-    COMMENT_ENTITY_1.setProperty(Comment.USERNAME_KEY,COMMENT_1.username);
-    COMMENT_ENTITY_1.setProperty(Comment.TIMESTAMP_KEY,COMMENT_1.timestamp);
-    COMMENT_ENTITY_1.setProperty(Comment.CONTENT_KEY,COMMENT_1.content);
+    COMMENT_ENTITY_1.setProperty(Comment.USERNAME_KEY, COMMENT_1.username);
+    COMMENT_ENTITY_1.setProperty(Comment.TIMESTAMP_KEY, COMMENT_1.timestamp);
+    COMMENT_ENTITY_1.setProperty(Comment.CONTENT_KEY, COMMENT_1.content);
     
     Comment comment = dataServlet.getCommentFromEntity(COMMENT_ENTITY_1);
 
@@ -124,13 +124,13 @@ public final class DataServletTest {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 
-    Assert.assertEquals(results.size(),1);
+    Assert.assertEquals(results.size(), 1);
 
     Entity commentEntity = results.get(0);
     Comment comment = dataServlet.getCommentFromEntity(results.get(0));
 
-    Assert.assertEquals(commentKey,commentEntity.getKey());
-    compareComment(COMMENT_1,comment);
+    Assert.assertEquals(commentKey, commentEntity.getKey());
+    compareComment(COMMENT_1, comment);
   }
 
   @Test
@@ -151,7 +151,7 @@ public final class DataServletTest {
 
 
     ArrayList<Comment> expectedComments = 
-      new ArrayList(Arrays.asList(COMMENT_7,COMMENT_6,COMMENT_5));
+      new ArrayList(Arrays.asList(COMMENT_7, COMMENT_6, COMMENT_5));
 
     StringWriter expectedStringWriter = new StringWriter();
     PrintWriter expectedPrintWriter = new PrintWriter(expectedStringWriter);
@@ -159,9 +159,9 @@ public final class DataServletTest {
     expectedPrintWriter.println(gson.toJson(expectedComments));
 
     when(response.getWriter()).thenReturn(actualPrintWriter);
-    dataServlet.doGet(request,response);
+    dataServlet.doGet(request, response);
 
-    Assert.assertEquals(expectedStringWriter.toString(),actualStringWriter.toString());
+    Assert.assertEquals(expectedStringWriter.toString(), actualStringWriter.toString());
   }
 
   @Test
@@ -182,7 +182,7 @@ public final class DataServletTest {
 
 
     ArrayList<Comment> expectedComments = 
-      new ArrayList(Arrays.asList(COMMENT_7,COMMENT_5,COMMENT_4,COMMENT_2,COMMENT_1));
+      new ArrayList(Arrays.asList(COMMENT_7, COMMENT_5, COMMENT_4, COMMENT_2, COMMENT_1));
 
     StringWriter expectedStringWriter = new StringWriter();
     PrintWriter expectedPrintWriter = new PrintWriter(expectedStringWriter);
@@ -190,14 +190,14 @@ public final class DataServletTest {
     expectedPrintWriter.println(gson.toJson(expectedComments));
 
     when(response.getWriter()).thenReturn(actualPrintWriter);
-    dataServlet.doGet(request,response);
+    dataServlet.doGet(request, response);
 
-    Assert.assertEquals(expectedStringWriter.toString(),actualStringWriter.toString());
+    Assert.assertEquals(expectedStringWriter.toString(), actualStringWriter.toString());
   }
 
   @Test
   public void postCommentWhileLoggedInTest() throws IOException {
-    login(USER_1,false);
+    login(USER_1, false);
 
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
@@ -207,19 +207,19 @@ public final class DataServletTest {
 
     when(request.getParameter("comment-input")).thenReturn(COMMENT_1.content);
     when(response.getWriter()).thenReturn(actualPrintWriter);
-    dataServlet.doPost(request,response);
+    dataServlet.doPost(request, response);
 
     String responseStatusJson = actualStringWriter.toString();
-    DataServlet.ResponseStatus responseStatus = gson.fromJson(responseStatusJson,DataServlet.ResponseStatus.class);
+    DataServlet.ResponseStatus responseStatus = gson.fromJson(responseStatusJson, DataServlet.ResponseStatus.class);
 
     Assert.assertTrue(responseStatus.success);
-    Assert.assertEquals(null,responseStatus.errorMessage);
+    Assert.assertEquals(null, responseStatus.errorMessage);
 
     Query query = new Query("Comment");
     Entity commentEntity = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults()).get(0);
 
-    Assert.assertEquals(COMMENT_1.username,commentEntity.getProperty(Comment.USERNAME_KEY));
-    Assert.assertEquals(COMMENT_1.content,commentEntity.getProperty(Comment.CONTENT_KEY));
+    Assert.assertEquals(COMMENT_1.username, commentEntity.getProperty(Comment.USERNAME_KEY));
+    Assert.assertEquals(COMMENT_1.content, commentEntity.getProperty(Comment.CONTENT_KEY));
     logout();
   }
 
@@ -233,18 +233,18 @@ public final class DataServletTest {
 
     when(request.getParameter("comment-input")).thenReturn(COMMENT_1.content);
     when(response.getWriter()).thenReturn(actualPrintWriter);
-    dataServlet.doPost(request,response);
+    dataServlet.doPost(request, response);
 
     String responseStatusJson = actualStringWriter.toString();
-    DataServlet.ResponseStatus responseStatus = gson.fromJson(responseStatusJson,DataServlet.ResponseStatus.class);
+    DataServlet.ResponseStatus responseStatus = gson.fromJson(responseStatusJson, DataServlet.ResponseStatus.class);
 
     Assert.assertFalse(responseStatus.success);
-    Assert.assertEquals(DataServlet.ResponseStatus.NOT_LOGGED_IN,responseStatus.errorMessage);
+    Assert.assertEquals(DataServlet.ResponseStatus.NOT_LOGGED_IN, responseStatus.errorMessage);
 
     Query query = new Query("Comment");
     List<Entity> commentEntities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 
-    Assert.assertEquals(0,commentEntities.size());
+    Assert.assertEquals(0, commentEntities.size());
 
   }
 }
