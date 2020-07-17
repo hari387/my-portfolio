@@ -8,3 +8,5 @@ webapp
 .jekyll-cache
 
 .vscode
+
+log.txt
